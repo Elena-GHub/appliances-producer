@@ -1,6 +1,6 @@
 package appliances.producer;
 
-public interface PublisherChannel {
+public interface Notifier {
 
   void sendOvenNotification();
 

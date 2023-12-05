@@ -14,30 +14,30 @@ import org.springframework.web.bind.annotation.RestController;
 )
 public class ApplianceController {
 
-  private final PublisherChannel publisher;
+  private final Notifier notifier;
 
-  public ApplianceController(PublisherChannel publisher) {
-    this.publisher = publisher;
+  public ApplianceController(Notifier notifier) {
+    this.notifier = notifier;
   }
 
   @RequestMapping("/oven")
   @PostMapping
   public ResponseEntity<?> sendOvenNotification() {
-    publisher.sendOvenNotification();
+    notifier.sendOvenNotification();
     return ResponseEntity.accepted().build();
   }
 
   @RequestMapping("/washing-machine")
   @PostMapping
   public ResponseEntity<?> sendWashingMachineNotification() {
-    publisher.sendWashingMachineNotification();
+    notifier.sendWashingMachineNotification();
     return ResponseEntity.accepted().build();
   }
 
   @RequestMapping("/microwave")
   @PostMapping
   public ResponseEntity<?> sendMicrowaveNotification() {
-    publisher.sendMicrowaveNotification();
+    notifier.sendMicrowaveNotification();
     return ResponseEntity.accepted().build();
   }
 }
