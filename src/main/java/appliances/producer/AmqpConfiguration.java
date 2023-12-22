@@ -18,18 +18,22 @@ import org.springframework.context.annotation.Configuration;
 @Slf4j
 public class AmqpConfiguration {
 
-  public static final String OVEN_EXCHANGE = "appliances.oven";
-  public static final String OVEN_BEEPED_QUEUE = "appliances.oven.beeped";
-  public static final String WASHING_MACHINE_EXCHANGE = "appliances.washingMachine";
-  public static final String WASHING_MACHINE_BEEPED_QUEUE = "appliances.washingMachine.beeped";
-  public static final String MICROWAVE_EXCHANGE = "appliances.microwave";
-  public static final String MICROWAVE_BEEPED_QUEUE = "appliances.microwave.beeped";
+  public static final String APPLIANCES_EXCHANGE = "appliances_exchange";
+  public static final String OVEN_BEEPED_QUEUE = "oven_beeped_queue";
+  public static final String WASHING_MACHINE_BEEPED_QUEUE = "washing_machine_beeped_queue";
+  public static final String MICROWAVE_BEEPED_QUEUE = "microwave_beeped_queue";
   private static final String DLX_EXCHANGE = "x-dead-letter-exchange";
   private static final String DLX_EXCHANGE_VALUE = "DLX";
   private static final String DLQ = "x-dead-letter-routing-key";
   private static final String DLQ_SUFFIX = ".dlq";
-  public static final String ROUTING_KEY = "#";
+  public static final String WASHING_MACHINE_ROUTING_KEY = "washing_machine_routing_key";
+  public static final String OVEN_ROUTING_KEY = "oven_routing_key";
+  public static final String MICROWAVE_ROUTING_KEY = "microwave_routing_key";
 
+  @Bean
+  public TopicExchange appliancesExchange() {
+    return new TopicExchange(APPLIANCES_EXCHANGE);
+  }
   @Bean
   Jackson2JsonMessageConverter jackson2JsonMessageConverter() {
     return new Jackson2JsonMessageConverter();
@@ -51,22 +55,16 @@ public class AmqpConfiguration {
   }
 
   // Washing Machine related beans
-
   @Bean
-  TopicExchange washingMachineExchange() {
-    return new TopicExchange(WASHING_MACHINE_EXCHANGE);
-  }
-
-  @Bean
-  Queue washingMachineBeepedQueue() {
+  public Queue washingMachineBeepedQueue(){
     return new Queue(WASHING_MACHINE_BEEPED_QUEUE, true, false, false, Map.of(
       DLX_EXCHANGE, DLX_EXCHANGE_VALUE,
       DLQ, WASHING_MACHINE_BEEPED_QUEUE));
   }
 
   @Bean
-  Binding washingMachineBeepedBinding(TopicExchange washingMachineExchange, Queue washingMachineBeepedQueue) {
-    return BindingBuilder.bind(washingMachineBeepedQueue).to(washingMachineExchange).with(ROUTING_KEY);
+  public Binding washingMachineBeepedBinding(TopicExchange appliancesExchange, Queue washingMachineBeepedQueue) {
+    return BindingBuilder.bind(washingMachineBeepedQueue).to(appliancesExchange).with(WASHING_MACHINE_ROUTING_KEY);
   }
 
   @Bean
@@ -80,12 +78,6 @@ public class AmqpConfiguration {
   }
 
   // Oven related beans
-
-  @Bean
-  TopicExchange ovenExchange() {
-    return new TopicExchange(OVEN_EXCHANGE);
-  }
-
   @Bean
   Queue ovenBeepedQueue() {
     return new Queue(OVEN_BEEPED_QUEUE, true, false, false, Map.of(
@@ -94,8 +86,8 @@ public class AmqpConfiguration {
   }
 
   @Bean
-  Binding ovenBeepedBinding(TopicExchange ovenExchange, Queue ovenBeepedQueue) {
-    return BindingBuilder.bind(ovenBeepedQueue).to(ovenExchange).with(ROUTING_KEY);
+  Binding ovenBeepedBinding(TopicExchange appliancesExchange, Queue ovenBeepedQueue) {
+    return BindingBuilder.bind(ovenBeepedQueue).to(appliancesExchange).with(OVEN_ROUTING_KEY);
   }
 
   @Bean
@@ -109,12 +101,6 @@ public class AmqpConfiguration {
   }
 
   // Microwave related beans
-
-  @Bean
-  TopicExchange microwaveExchange() {
-    return new TopicExchange(MICROWAVE_EXCHANGE);
-  }
-
   @Bean
   Queue microwaveBeepedQueue() {
     return new Queue(MICROWAVE_BEEPED_QUEUE, true, false, false, Map.of(
@@ -123,8 +109,8 @@ public class AmqpConfiguration {
   }
 
   @Bean
-  Binding microwaveBeepedBinding(TopicExchange microwaveExchange, Queue microwaveBeepedQueue) {
-    return BindingBuilder.bind(microwaveBeepedQueue).to(microwaveExchange).with(ROUTING_KEY);
+  Binding microwaveBeepedBinding(TopicExchange appliancesExchange, Queue microwaveBeepedQueue) {
+    return BindingBuilder.bind(microwaveBeepedQueue).to(appliancesExchange).with(MICROWAVE_ROUTING_KEY);
   }
 
   @Bean
@@ -132,4 +118,3 @@ public class AmqpConfiguration {
     return new Queue(MICROWAVE_BEEPED_QUEUE + DLQ_SUFFIX);
   }
 }
-

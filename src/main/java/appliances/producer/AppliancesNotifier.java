@@ -1,9 +1,9 @@
 package appliances.producer;
 
-import static appliances.producer.AmqpConfiguration.MICROWAVE_EXCHANGE;
-import static appliances.producer.AmqpConfiguration.OVEN_EXCHANGE;
-import static appliances.producer.AmqpConfiguration.ROUTING_KEY;
-import static appliances.producer.AmqpConfiguration.WASHING_MACHINE_EXCHANGE;
+import static appliances.producer.AmqpConfiguration.APPLIANCES_EXCHANGE;
+import static appliances.producer.AmqpConfiguration.MICROWAVE_ROUTING_KEY;
+import static appliances.producer.AmqpConfiguration.OVEN_ROUTING_KEY;
+import static appliances.producer.AmqpConfiguration.WASHING_MACHINE_ROUTING_KEY;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -18,24 +18,24 @@ public class AppliancesNotifier implements Notifier {
   @Override
   public void sendOvenNotification() {
     log.info("Sending notification");
-    String message = "Message: The oven beeped! Your dinner is waiting";
-    rabbitTemplate.convertAndSend(OVEN_EXCHANGE, ROUTING_KEY, message);
+    String message = "Message: The oven beeped with 1 EXCHANGE and oven ROUTING KEY! Your dinner is waiting";
+    rabbitTemplate.convertAndSend(APPLIANCES_EXCHANGE, OVEN_ROUTING_KEY, message);
     log.info("Notification sent successfully");
   }
 
   @Override
   public void sendWashingMachineNotification() {
     log.info("Sending notification");
-    String message = "Message: The washing machine beeped! Your clothes are clean";
-    rabbitTemplate.convertAndSend(WASHING_MACHINE_EXCHANGE, ROUTING_KEY, message);
+    String message = "Message: The washing machine beeped with 1 EXCHANGE and washing machine ROUTING KEY! Your clothes are clean";
+    rabbitTemplate.convertAndSend(APPLIANCES_EXCHANGE, WASHING_MACHINE_ROUTING_KEY, message);
     log.info("Notification sent successfully");
   }
 
   @Override
   public void sendMicrowaveNotification() {
     log.info("Sending notification");
-    String message = "Message: The microwave beeped! Your hot chocolate is waiting";
-    rabbitTemplate.convertAndSend(MICROWAVE_EXCHANGE, ROUTING_KEY, message);
+    String message = "Message: The microwave beeped with 1 EXCHANGE and microwave ROUTING KEY! Your hot chocolate is waiting";
+    rabbitTemplate.convertAndSend(APPLIANCES_EXCHANGE, MICROWAVE_ROUTING_KEY, message);
     log.info("Notification sent successfully");
   }
 }
